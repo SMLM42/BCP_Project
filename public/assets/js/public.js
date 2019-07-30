@@ -9,7 +9,7 @@ $("#submit").on("click", function (event) {
         data: {initialString: inString}
     }).then(data => { 
 
-     console.log(data)
+     alert(data)
 
     });
     

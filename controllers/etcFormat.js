@@ -69,6 +69,7 @@ const controllerObj = {
                 } else {
 
                     let values = e.trim().split("\n").filter(Boolean);
+
                     detachmentsObj[name] = values;
                     // console.log(detachmentsObj[name]);
 

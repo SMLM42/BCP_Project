@@ -86,6 +86,23 @@ const controllerObj = {
 
                     function createObj(obj) {
                         obj.detachment = name.split("Detachment")[0]
+
+                        let detach = name.split("Detachment")[0]
+
+                        if (detach == "Battalion"){
+                            obj.CP = 5;
+                        } else if (detach == "Brigade"){
+                            obj.CP = 12;
+                        } else if (detach == "Vanguard" || detach == "Spearhead" || detach == "Outrider" || detach == "Supreme Command" || detach == "Air Wing"){
+                            obj.CP = 1;
+                        } else if (detach == "Auxiliary Support") {
+                            obj.CP = -1;
+                        } else if (detach == "Super-Heavy") {
+                            obj.CP = 3;
+                        } else {
+                            obj.CP = 0;
+                        }
+
                         let newArr = detachmentsObj[name]
 
                         for (let index = 1; index < newArr.length; index++) {
@@ -109,13 +126,13 @@ const controllerObj = {
         // console.log("obj 1: " + JSON.stringify(obj_1))
         // console.log("obj 2: " + JSON.stringify(obj_2))
         // console.log("obj 3: " + JSON.stringify(obj_3))
-        console.log(obj_1);
-        console.log(obj_2);
-        console.log(obj_3);
+        // console.log(obj_1);
+        // console.log(obj_2);
+        // console.log(obj_3);
 
-        detachmentsObj = { requiredInfo: requiredInfoObj, detachment1: obj_1, detachment2: obj_2, detachment3: obj_3};
-
-        return detachmentsObj;
+        var finalobj = { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3};
+        return console.log(finalobj);
+      
     }
 }
 

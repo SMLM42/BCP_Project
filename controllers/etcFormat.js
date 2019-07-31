@@ -112,6 +112,10 @@ const controllerObj = {
         console.log(obj_1);
         console.log(obj_2);
         console.log(obj_3);
+
+        detachmentsObj = { requiredInfo: requiredInfoObj, detachment1: obj_1, detachment2: obj_2, detachment3: obj_3};
+
+        return detachmentsObj;
     }
 }
 

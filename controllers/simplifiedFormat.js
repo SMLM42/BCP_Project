@@ -36,28 +36,8 @@
 // dedicated_transports: 2;
 // fortification: 0
 // }
-const simplifiedObj = {
+module.exports =  simplifiedObj = {
   validate: (str, res) => {
-    class obj {
-      constructor() {
-        this.detachment = "";
-        this.CP = 0;
-        this.HQ = 0;
-        this.Troop = 0;
-        this.Elite = 0;
-        this.Fast_Attack = 0;
-        this.Heavy_Support = 0;
-        this.Flyers = 0;
-        this.Lord_of_War = 0;
-        this.Dedicated_Transports = 0;
-        this.Fortification = 0;
-      }
-    }
-
-<<<<<<< HEAD
-module.exports = simplifiedObj = {
-  validate: (str, res) => {
-    // set variable for result object
     class obj {
       constructor() {
         this.detachment = "";
@@ -81,7 +61,6 @@ module.exports = simplifiedObj = {
     if (str) {
       let detachmentObj = {}
       detachmentLine = str.split("Detachment");
-      // console.log(detachmentLine)
       detachmentObj.detachment = detachmentLine[0];
       detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 
@@ -99,32 +78,6 @@ module.exports = simplifiedObj = {
         }
       });
 
-=======
-    let obj_1 = "";
-    let obj_2 = "";
-    let obj_3 = "";
-
-    if (str) {
-      let detachmentObj = {}
-      detachmentLine = str.split("detachment");
-      detachmentObj.detachment = detachmentLine[0];
-      detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
-
-      let infoLine = str.split("-");
-      infoLine = infoLine.splice(1, infoLine.length);
-
-      let typeDetachment;
-
-      infoLine.forEach((element, index) => {
-        if (index % 2 === 0) {
-          typeDetachment = element;
-        } else {
-          let num = element.split("\n").filter(Boolean).length
-          detachmentObj[typeDetachment] = num;
-        }
-      });
-
->>>>>>> f7554b8290ea2acf78d9a3d0d1e3dffb5bbcbc84
       console.log(detachmentObj);
     }
   }

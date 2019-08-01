@@ -147,22 +147,14 @@ const detachmentTemplates = {
 
 var detachmentNum = 0
 let etcObj = require("./etcFormat.js");
-<<<<<<< HEAD
-let simpObj = require("./simplifiedFormat.js");
-=======
 let simplifiedObj = require("./simplifiedFormat.js");
->>>>>>> f7554b8290ea2acf78d9a3d0d1e3dffb5bbcbc84
 
 
 
 const controllerObj = {
     validate: (req, res) => {
-<<<<<<< HEAD
-        simpObj.validate(req.body.initialString, res);
-=======
         // etcObj.validate(req.body.initialString, res);
         simplifiedObj.validate(req.body.initialString, res);
->>>>>>> f7554b8290ea2acf78d9a3d0d1e3dffb5bbcbc84
 
         // // This function will check that the types of detachments are legal, and that their cp values are correct. The array returned by the ++ split is an odd length with the odd numbers being Detachment headers and the even being the actual body of the list
         //   for (var i = 1; i < armyList.length; (i = (i + 2))) {

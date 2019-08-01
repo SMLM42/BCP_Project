@@ -15,6 +15,12 @@
 // Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
 // Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
 
+// -Elites-
+
+// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
+// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
+
+
 // format should be:
 
 // {detachment:
@@ -31,40 +37,51 @@
 // fortification: 0
 // }
 
-// took the data parsing framwork and will try to adapt
-// require necessary packages
-const fs = require("fs");
-const readline = require('linebyline');
-rl = readline('XYZ.txt');
-
-// set variable for result object
-const userInput = {};
-
-// open the file used to append data
-fs.open('XYZ.txt', 'a', (err, fd) => {
-  if (err) throw err;
-
-  // read through each line from the txt file
-  rl.on('line', function (line) {
-    // main section that describes what we want to happen to the data
-    if (line) {
-      line.split(" ");
-      // likely need to change these to not pick up same data in every line
-      let typeDetachment = line[0];
-      let cp = parseInt(line[2].split(""));
-      let
-
-
+module.exports = simplifiedObj = {
+  validate: (str, res) => {
+    // set variable for result object
+    class obj {
+      constructor() {
+        this.detachment = "";
+        this.CP = 0;
+        this.HQ = 0;
+        this.Troop = 0;
+        this.Elite = 0;
+        this.Fast_Attack = 0;
+        this.Heavy_Support = 0;
+        this.Flyers = 0;
+        this.Lord_of_War = 0;
+        this.Dedicated_Transports = 0;
+        this.Fortification = 0;
+      }
     }
-  })
-    .on('error', function (err) {
-      console.log('Error while reading file.', err);
-    })
-    .on('close', function () {
-      // write what to do when you stop reading the txt file
-      // close the txt file
-      fs.close(fd, (err) => {
-        if (err) throw err;
+
+    let obj_1 = "";
+    let obj_2 = "";
+    let obj_3 = "";
+
+    if (str) {
+      let detachmentObj = {}
+      detachmentLine = str.split("Detachment");
+      // console.log(detachmentLine)
+      detachmentObj.detachment = detachmentLine[0];
+      detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
+
+      let infoLine = str.split("-");
+      infoLine = infoLine.splice(1, infoLine.length);
+
+      let typeDetachment;
+
+      infoLine.forEach((element, index) => {
+        if (index % 2 === 0) {
+          typeDetachment = element;
+        } else {
+          let num = element.split("\n").filter(Boolean).length
+          detachmentObj[typeDetachment] = num;
+        }
       });
-    });
-});
+
+      console.log(detachmentObj);
+    }
+  }
+}

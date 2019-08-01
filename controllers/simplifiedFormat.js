@@ -15,6 +15,12 @@
 // Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
 // Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
 
+// -Elites-
+
+// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
+// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
+
+
 // format should be:
 
 // {detachment:
@@ -30,7 +36,7 @@
 // dedicated_transports: 2;
 // fortification: 0
 // }
-const simplifiedObj = {
+module.exports =  simplifiedObj = {
   validate: (str, res) => {
     class obj {
       constructor() {
@@ -54,7 +60,7 @@ const simplifiedObj = {
 
     if (str) {
       let detachmentObj = {}
-      detachmentLine = str.split("detachment");
+      detachmentLine = str.split("Detachment");
       detachmentObj.detachment = detachmentLine[0];
       detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 

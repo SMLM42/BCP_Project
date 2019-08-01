@@ -32,7 +32,6 @@
 // }
 const simplifiedObj = {
   validate: (str, res) => {
-    // set variable for result object
     class obj {
       constructor() {
         this.detachment = "";
@@ -55,9 +54,9 @@ const simplifiedObj = {
 
     if (str) {
       let detachmentObj = {}
-      detechmentLine = str.split("detachment");
-      detachmentObj.detachment = detechmentLine[0];
-      detachmentObj.CP = parseInt(detechmentLine[1].split("CP")[0].trim());
+      detachmentLine = str.split("detachment");
+      detachmentObj.detachment = detachmentLine[0];
+      detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 
       let infoLine = str.split("-");
       infoLine = infoLine.splice(1, infoLine.length);

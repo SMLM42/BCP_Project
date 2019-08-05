@@ -56,21 +56,25 @@ const controllerObj = {
             }
 
             let detachments = detachmentInfo.split("==").filter(value => value !== "\n\n");
+            console.log(detachments)
+            if (detachments[0].includes("\n")) {
+                detachments.shift()
+            }
             let name = "";
             let detachmentName = []
             let detachmentUnits = []
 
-            for (let i = 1; i < detachments.length; (i = (i + 2))) {
+            for (let i = 0; i < detachments.length; (i = (i + 2))) {
                 let values = detachments[i].trim().split("\n").filter(Boolean);
                 detachmentName.push(values)
             }
-            for (let i = 2; i < detachments.length; (i = (i + 2))) {
+            for (let i = 1; i < detachments.length; (i = (i + 2))) {
                 name = detachments[i].trim().split(" ");
                 for (let i = 0; i < name.length; i++) {
                     name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
                 }
                 name = name.join('');
-                // console.log("units: " + name)
+                console.log("units: " + name)
                 detachmentUnits.push(name)
             }
             for (let i = 0; i < detachmentName.length; i++) {

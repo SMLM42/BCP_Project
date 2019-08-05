@@ -2,9 +2,9 @@ const controllerObj = {
     validate: (str, res) => {
 
         class obj {
-            constructor() {
-                this.detachment = "";
-                this.CP = 0;
+            constructor(detachmentName) {
+                this.detachment = detachmentName;
+                this.CP = 0
                 this.HQ = 0;
                 this.Troop = 0;
                 this.Elite = 0;
@@ -16,7 +16,7 @@ const controllerObj = {
                 this.Fortification = 0;
             }
         }
-        
+
         let obj_1 = "";
         let obj_2 = "";
         let obj_3 = "";
@@ -41,7 +41,7 @@ const controllerObj = {
                 });
                 return !same;
             });
-            // console.log(missing);
+            console.log(missing);
 
             if (missing.length > 0) {
                 missing.filter(val => val.includes("Player"));
@@ -57,71 +57,71 @@ const controllerObj = {
 
             let detachments = detachmentInfo.split("==").filter(value => value !== "\n\n");
             let name = "";
-            let detachmentsObj = {};
+            let detachmentName = []
+            let detachmentUnits = []
 
-            detachments.forEach(function (e, index) {
-                if (index % 2 === 0) {
-                    name = e.trim().split(" ");
-                    for (let i = 0; i < name.length; i++) {
-                        name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
-                    }
-                    name = name.join('');
+            for (let i = 1; i < detachments.length; (i = (i + 2))) {
+                let values = detachments[i].trim().split("\n").filter(Boolean);
+                detachmentName.push(values)
+            }
+            for (let i = 2; i < detachments.length; (i = (i + 2))) {
+                name = detachments[i].trim().split(" ");
+                for (let i = 0; i < name.length; i++) {
+                    name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
+                }
+                name = name.join('');
+                // console.log("units: " + name)
+                detachmentUnits.push(name)
+            }
+            for (let i = 0; i < detachmentName.length; i++) {
+                if (obj_1 == "") {
+                    obj_1 = new obj(detachmentName[i]);
+                    createObj(obj_1, detachmentUnits[i])
+                } else if (obj_2 == "") {
+                    obj_2 = new obj(detachmentName[i]);
+                    createObj(obj_2, detachmentUnits[i])
+                } else if (obj_3 == "") {
+                    obj_3 = new obj(detachmentName[i]);
+                    createObj(obj_3, detachmentUnits[i])
+                }
+            }
+            function createObj(obj, units) {
+
+                let detach = obj.detachment
+
+                if (detach == "Battalion") {
+                    obj.CP = 5;
+                } else if (detach == "Brigade") {
+                    obj.CP = 12;
+                } else if (detach == "Vanguard" || detach == "Spearhead" || detach == "Outrider" || detach == "Supreme Command" || detach == "Air Wing") {
+                    obj.CP = 1;
+                } else if (detach == "Auxiliary Support") {
+                    obj.CP = -1;
+                } else if (detach == "Super-Heavy") {
+                    obj.CP = 3;
                 } else {
+                    obj.CP = 0;
+                }
 
-                    let values = e.trim().split("\n").filter(Boolean);
+                let newArr = units.split("\n").filter(Boolean)
 
-                    detachmentsObj[name] = values;
-                    // console.log(detachmentsObj[name]);
-
-                    if (obj_1 == "") {
-                        obj_1 = new obj();
-                        createObj(obj_1)
-                    } else if (obj_2 == "") {
-                        obj_2 = new obj();
-                        createObj(obj_2)
-                    } else if (obj_3 == "") {
-                        obj_3 = new obj();
-                        createObj(obj_3)
-                    }
-
-                    function createObj(obj) {
-                        obj.detachment = name.split("Detachment")[0]
-
-                        let detach = name.split("Detachment")[0]
-
-                        if (detach == "Battalion"){
-                            obj.CP = 5;
-                        } else if (detach == "Brigade"){
-                            obj.CP = 12;
-                        } else if (detach == "Vanguard" || detach == "Spearhead" || detach == "Outrider" || detach == "Supreme Command" || detach == "Air Wing"){
-                            obj.CP = 1;
-                        } else if (detach == "Auxiliary Support") {
-                            obj.CP = -1;
-                        } else if (detach == "Super-Heavy") {
-                            obj.CP = 3;
-                        } else {
-                            obj.CP = 0;
-                        }
-
-                        let newArr = detachmentsObj[name]
-
-                        for (let index = 1; index < newArr.length; index++) {
-                            let element = newArr[index].split(":")
-                            for (let index = 0; index < element.length; index++) {
-                                if (element[index].toUpperCase() == "HQ") obj.HQ++ 
-                                if (element[index].toUpperCase() == "EL") obj.Elite++
-                                if (element[index].toUpperCase() == "TR") obj.Troop++
-                                if (element[index].toUpperCase() == "FA") obj.Fast_Attack++
-                                if (element[index].toUpperCase() == "HS") obj.Heavy_Support++
-                                if (element[index].toUpperCase() == "FL") obj.Flyers++
-                                if (element[index].toUpperCase() == "DT") obj.Dedicated_Transport++
-                                if (element[index].toUpperCase() == "LOW") obj.Lord_of_War++
-                                if (element[index].toUpperCase() == "FORTIFICATION") obj_1.FORTIFICATION++
-                            }
-                        }
+                for (let index = 1; index < newArr.length; index++) {
+                    let element = newArr[index].split(":")
+                    for (let index = 0; index < element.length; index++) {
+                        if (element[index].toUpperCase() == "HQ") { obj.HQ++ }
+                        if (element[index].toUpperCase() == "EL") { obj.Elite++ }
+                        if (element[index].toUpperCase() == "TR") { obj.Troop++ }
+                        if (element[index].toUpperCase() == "FA") { obj.Fast_Attack++ }
+                        if (element[index].toUpperCase() == "HS") { obj.Heavy_Support++ }
+                        if (element[index].toUpperCase() == "FL") { obj.Flyers++ }
+                        if (element[index].toUpperCase() == "DT") { obj.Dedicated_Transport++ }
+                        if (element[index].toUpperCase() == "LOW") { obj.Lord_of_War++ }
+                        if (element[index].toUpperCase() == "FORTIFICATION") { obj_1.FORTIFICATION++ }
                     }
                 }
-            });
+            }
+            // }
+            // });
         }
         // console.log("obj 1: " + JSON.stringify(obj_1))
         // console.log("obj 2: " + JSON.stringify(obj_2))
@@ -130,9 +130,10 @@ const controllerObj = {
         // console.log(obj_2);
         // console.log(obj_3);
 
-        var finalobj = { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3};
-        return console.log(finalobj);
-      
+        var finalobj = { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 };
+        console.log(finalobj);
+        return finalobj
+
     }
 }
 

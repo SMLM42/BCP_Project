@@ -36,7 +36,7 @@
 // dedicated_transports: 2;
 // fortification: 0
 // }
-module.exports =  simplifiedObj = {
+module.exports = simplifiedObj = {
   validate: (str, res) => {
     class obj {
       constructor() {
@@ -58,27 +58,55 @@ module.exports =  simplifiedObj = {
     let obj_2 = "";
     let obj_3 = "";
 
+    let unit = "";
+    let inUnit = false;
+
     if (str) {
       let detachmentObj = {}
-      detachmentLine = str.split("Detachment");
-      detachmentObj.detachment = detachmentLine[0];
-      detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 
-      let infoLine = str.split("-");
-      infoLine = infoLine.splice(1, infoLine.length);
+      var lines = str.trim().split(/\s*[\r\n]+\s*/g);
+      console.log(lines);
 
-      let typeDetachment;
+      lines.forEach((element, index) => {
+        detachmentLine = lines[0].split("Detachment");
+        detachmentObj.detachment = detachmentLine[0];
+        detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 
-      infoLine.forEach((element, index) => {
-        if (index % 2 === 0) {
-          typeDetachment = element;
-        } else {
-          let num = element.split("\n").filter(Boolean).length
-          detachmentObj[typeDetachment] = num;
+        // if the lines are still in the unit, append the line to the unit string
+        if (inUnit) {
+          unit += element;
         }
-      });
 
-      console.log(detachmentObj);
-    }
+        // check if the line begin with -,+, or = for unit
+        // /(?-=\+)+/g
+        if (lines.slice(0) === "-") {
+          // if true, append line to unit string
+          unit += element;
+          // set variable to true
+          inUnit = true;
+        }
+
+        // if new line is not part of the unit, append the unit string to the file and set inUnit to false
+        if (inUnit && (lines === "")) {
+
+          inUnit = false;
+
+          unit = "";
+        }
+
+        let typeDetachment;
+
+        lines.forEach((element, index) => {
+          if (index % 2 === 0) {
+            typeDetachment = element;
+          } else {
+            let num = element.split("\n").filter(Boolean).length
+            detachmentObj[typeDetachment] = num;
+          }
+        });
+
+        console.log(detachmentObj);
+      })
+    };
   }
 }

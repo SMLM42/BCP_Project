@@ -36,7 +36,7 @@
 // dedicated_transports: 2;
 // fortification: 0
 // }
-module.exports =  simplifiedObj = {
+module.exports = simplifiedObj = {
   validate: (str, res) => {
     class obj {
       constructor() {
@@ -61,6 +61,23 @@ module.exports =  simplifiedObj = {
     if (str) {
       let detachmentObj = {}
       detachmentLine = str.split("Detachment");
+      for (let i = 1; i < detachmentLine.length; i++) {
+        var test = detachmentLine[i].trim().split(" ")
+
+        // if (test.includes("Super-Heavy", 0)) { console.log("yup") }
+        // if (test[(test.length - 2)] == "Supreme" || test[(test.length - 2)] == "Air" || test[(test.length - 2)] == "Fortification" || test[(test.length - 2)] == "Auxiliary" || (test[(test.length - 2)] == "Super-Heavy" && (test[(test.length - 1)]) == "Auxiliary")) {
+        //   test = (test[(test.length - 2)] + " " + test[test[(test.length - 1)]])
+        //   console.log("yup")
+        // }
+
+        if (test[(test.length - 1)] == "Auxiliary") {
+          console.log(test[(test.length - 2)])
+          if ((test[(test.length - 2)] === "Super-Heavy") || (test[(test.length - 2)] === "Heavy")) {
+            console.log("yup")
+          } else { console.log("nah") }
+        }
+      }
+      // console.log(detachmentLine)
       detachmentObj.detachment = detachmentLine[0];
       detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
 

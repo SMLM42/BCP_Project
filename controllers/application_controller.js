@@ -153,7 +153,7 @@ let simplifiedObj = require("./simplifiedFormat.js");
 
 const controllerObj = {
     validate: (req, res) => {
-        etcObj.validate(req.body.initialString, res);
+        simplifiedObj.validate(req.body.initialString, res);
         // simplifiedObj.validate(req.body.initialString, res);
 
         // // This function will check that the types of detachments are legal, and that their cp values are correct. The array returned by the ++ split is an odd length with the odd numbers being Detachment headers and the even being the actual body of the list

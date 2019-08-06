@@ -1,24 +1,34 @@
 // Example:
 
-// Battalion Detachment 5CP (Tau Empire) [ 13PL, 201pts]
-
-// Sept: Sa’cea
-
-// -HQ-
-
-// Cadre Fireblade [2pl, 42pts] markerlight, pulse rifle, photon grenades
-// Ethereal [2pl , 45pts] Warlord, Honor Blade
-
-// -Troop-
-
-// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
-// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
-// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
-
-// -Elites-
-
-// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
-// Strike Team [3pl, 38pts] x5, shasui, markerlight, pulse rifle, photon grenades
+// Battalion Detachment 5CP(Chaos - Daemons)[60PL, 1064pts]
+// 
+// - HQ -
+// 
+// Be’lakor[14pl, 240pts]Death Hex, Infernal Gaze, Malefic talon, Smite, The Blade of Shadows
+// Daemon Prince of Chaos[9pl, 180pts]Khorne, Malefic talon, Skullreaver, Wings
+// Daemon Prince of Chaos[9pl, 180pts]Nurlge, Hellforged sword, Malefic talon, Wings
+// 
+// - Troop -
+// 
+// Nurglings[3pl, 54pts]x3
+// Nurglings[3pl, 54pts]x3
+// Nurglings[3pl, 54pts]x3
+// Nurglings[3pl, 54pts]x3
+// Nurglings[3pl, 54pts]x3
+// Nurglings[3pl, 54pts]x3
+// 
+// - Elite -
+// 
+// Exalted Flamer[5pl, 70pts]Fire of Tzeentch, Tongues of flame
+// Exalted Flamer[5pl, 70pts]Fire of Tzeentch, Tongues of flame
+// 
+// Supreme Command Detachment 1CP(Chaos - Thousand Sons)[27 PL, 540pts]
+// 
+// -HQ -
+// 
+// Daemon Prince of Tzeentch[9pl, 180pts]Malefic talon, Malefic talon, Wings
+// Daemon Prince of Tzeentch[9pl, 180pts]Malefic talon, Malefic talon, Wings
+// Daemon Prince of Tzeentch[9pl, 180pts]Warlord, Malefic talon, Malefic talon, Wings
 
 
 // format should be:
@@ -39,8 +49,8 @@
 module.exports =  simplifiedObj = {
   validate: (str, res) => {
     class obj {
-      constructor() {
-        this.detachment = "";
+      constructor(detachmentName) {
+        this.detachment = detachmentName;
         this.CP = 0;
         this.HQ = 0;
         this.Troop = 0;
@@ -59,26 +69,65 @@ module.exports =  simplifiedObj = {
     let obj_3 = "";
 
     if (str) {
-      let detachmentObj = {}
-      detachmentLine = str.split("Detachment");
-      detachmentObj.detachment = detachmentLine[0];
-      detachmentObj.CP = parseInt(detachmentLine[1].split("CP")[0].trim());
+      let detachmentObj = {};
+      let detachmentLine = str.split("Detachment");
+      let detachmentName = [];
+      for (var i = 0; i < detachmentLine.length-1; i++) {
+        let detachmentArr = detachmentLine[i].split("\n").filter(Boolean);
+        detachmentName.push(detachmentArr[detachmentArr.length-1].trim());
+      }
 
-      let infoLine = str.split("-");
-      infoLine = infoLine.splice(1, infoLine.length);
-
-      let typeDetachment;
-
-      infoLine.forEach((element, index) => {
-        if (index % 2 === 0) {
-          typeDetachment = element;
-        } else {
-          let num = element.split("\n").filter(Boolean).length
-          detachmentObj[typeDetachment] = num;
+      for (let i = 0; i < detachmentName.length; i++) {
+        if (obj_1 == "") {
+          obj_1 = new obj(detachmentName[i]);
+          createObj(obj_1, detachmentLine[i+1])
+        } else if (obj_2 == "") {
+          obj_2 = new obj(detachmentName[i]);
+          createObj(obj_2, detachmentLine[i+1])
+        } else if (obj_3 == "") {
+          obj_3 = new obj(detachmentName[i]);
+          createObj(obj_3, detachmentLine[i+1])
         }
-      });
+      }
 
-      console.log(detachmentObj);
+      function createObj(obj, arr) {
+        let detach = obj.detachment
+
+        if (detach == "Battalion") {
+          obj.CP = 5;
+        } else if (detach == "Brigade") {
+          obj.CP = 12;
+        } else if (detach == "Vanguard" || detach == "Spearhead" || detach == "Outrider" || detach == "Supreme Command" || detach == "Air Wing") {
+          obj.CP = 1;
+        } else if (detach == "Auxiliary Support") {
+          obj.CP = -1;
+        } else if (detach == "Super-Heavy") {
+          obj.CP = 3;
+        } else {
+          obj.CP = 0;
+        }
+
+        let newArr = arr.split("-");
+        newArr = newArr.splice(2, newArr.length);
+
+        let typeDetachment;
+
+        // console.log(newArr);
+
+        newArr.forEach((element, index) => {
+          if (index % 2 === 0) {
+            typeDetachment = element.trim();
+          } else {
+            let num = element.split("\n").filter(Boolean).length;
+            obj[typeDetachment.replace(" ", "_")] = num;
+          }
+        });
+
+      }
+
+      let finalobj = { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 };
+      console.log(finalobj);
+      return finalobj
     }
   }
 }

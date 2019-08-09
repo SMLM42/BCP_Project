@@ -41,7 +41,6 @@ const controllerObj = {
                 });
                 return !same;
             });
-            console.log(missing);
 
             if (missing.length > 0) {
                 missing.filter(val => val.includes("Player"));
@@ -56,7 +55,6 @@ const controllerObj = {
             }
 
             let detachments = detachmentInfo.split("==").filter(value => value !== "\n\n");
-            console.log(detachments)
             if (detachments[0].includes("\n")) {
                 detachments.shift()
             }
@@ -74,7 +72,6 @@ const controllerObj = {
                     name[i] = name[i].charAt(0).toUpperCase() + name[i].substring(1);
                 }
                 name = name.join('');
-                console.log("units: " + name)
                 detachmentUnits.push(name)
             }
             for (let i = 0; i < detachmentName.length; i++) {
@@ -110,18 +107,22 @@ const controllerObj = {
                 let newArr = units.split("\n").filter(Boolean)
 
                 for (let index = 1; index < newArr.length; index++) {
-                    let element = newArr[index].split(":")
-                    for (let index = 0; index < element.length; index++) {
-                        if (element[index].toUpperCase() == "HQ") { obj.HQ++ }
-                        if (element[index].toUpperCase() == "EL") { obj.Elite++ }
-                        if (element[index].toUpperCase() == "TR") { obj.Troop++ }
-                        if (element[index].toUpperCase() == "FA") { obj.Fast_Attack++ }
-                        if (element[index].toUpperCase() == "HS") { obj.Heavy_Support++ }
-                        if (element[index].toUpperCase() == "FL") { obj.Flyers++ }
-                        if (element[index].toUpperCase() == "DT") { obj.Dedicated_Transport++ }
-                        if (element[index].toUpperCase() == "LOW") { obj.Lord_of_War++ }
-                        if (element[index].toUpperCase() == "FORTIFICATION") { obj_1.FORTIFICATION++ }
-                    }
+                    let element = newArr[index].split(":");
+                    if (element[0].toUpperCase() == "HQ") { obj.HQ++ };
+                    if (element[0].toUpperCase() == "EL") { obj.Elite++ };
+                    if (element[0].toUpperCase() == "TR") { obj.Troop++ };
+                    if (element[0].toUpperCase() == "FA") { obj.Fast_Attack++ };
+                    if (element[0].toUpperCase() == "HS") { obj.Heavy_Support++ };
+                    if (element[0].toUpperCase() == "FL") { obj.Flyers++ };
+                    if (element[0].toUpperCase() == "DT") { obj.Dedicated_Transport++ };
+                    if (element[0].toUpperCase() == "LOW") { obj.Lord_of_War++ };
+                    if (element[0].toUpperCase() == "FORTIFICATION") { obj_1.FORTIFICATION++ };
+                    let line = element[1];
+                    let msg = "";
+                    if (line.trim().match(/\d?\w+\(\d+\).*/g) === null) msg += "'(number)', ";
+                    if (line.trim().match(/.+\[\d+[Pp][Ll]\].+/g) === null) msg += "'[#PL]', ";
+                    if (line.trim().match(/.+\[\d+[Pp][Tt][Ss]\]/g) === null) msg += "'[#Pts]'";
+                    if (msg !== "") res.end("You are missing " + msg + " in the line '" + newArr[index] + "'\n");
                 }
             }
             // }

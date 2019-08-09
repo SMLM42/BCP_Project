@@ -119,7 +119,7 @@ const controllerObj = {
                     if (element[0].toUpperCase() == "FORTIFICATION") { obj_1.FORTIFICATION++ };
                     let line = element[1];
                     let msg = "";
-                    if (line.trim().match(/\d?\w+\(\d+\).*/g) === null) msg += "'(number)', ";
+                    if (line.trim().match(/\d?\w+(\'\w+)?\(\d+\).*/g) === null) msg += "'(number)', ";
                     if (line.trim().match(/.+\[\d+[Pp][Ll]\].+/g) === null) msg += "'[#PL]', ";
                     if (line.trim().match(/.+\[\d+[Pp][Tt][Ss]\]/g) === null) msg += "'[#Pts]'";
                     if (msg !== "") res.end("You are missing " + msg + " in the line '" + newArr[index] + "'\n");

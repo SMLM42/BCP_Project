@@ -107,18 +107,41 @@ module.exports =  simplifiedObj = {
           obj.CP = 0;
         }
 
-        let newArr = arr.split("-");
+        let detachArr = ["Battalion", "Brigade", "Vanguard", "Spearhead", "Outrider", "Supreme Command", "Air Wing", "Auxiliary Support", "Super-Heavy", "Patrol"];
+
+        let match = ["HQ", "Troop", "Elite", "Fast Attack", "Heavy Support", "Flyer", "Lord of War", "Dedicated Transport", "Fortification"];
+
+        let newArr = arr.split(/[-\+=]/);
+        let red = [newArr[0], newArr[1]].join(" ");
+        match.forEach(e => {
+          if(red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your detachment");
+        })
         newArr = newArr.splice(2, newArr.length);
 
         let typeDetachment;
 
         // console.log(newArr);
+        let msg = "";
 
         newArr.forEach((element, index) => {
           if (index % 2 === 0) {
             typeDetachment = element.trim();
           } else {
             let num = element.split("\n").filter(Boolean).length;
+            let line = element.split("\n").filter(Boolean);
+            console.log(line);
+
+            if (detachArr.includes(line[num-1].trim())) {
+              num--;
+              line = line.splice(0, num-1);
+            }
+
+            for (let x = 0; x < line.length; x++) {
+              if (line[x].match(/\w+(\'\w+)?.+/).index === 1) msg += "'word' before [points], ";
+              if (line[x].match(/.*\[\d+\s?[Pp][Ll],\s?\d+\s?[pP][Tt][Ss]\].*/) === null) msg += "missing something for the pts and/or PL. Please use the follwoing format [#PL, #pts]";
+              if (msg !== "") res.end("Following error(s) is/are produced in the line " + line[x] + ":\n" + msg);
+            }
+            
             obj[typeDetachment.replace(" ", "_")] = num;
           }
         });

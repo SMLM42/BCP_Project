@@ -1,0 +1,147 @@
+const detachmentTemplates = {
+    Patrol: {
+        CP: 0,
+        HQ: { min: 1, max: 2 },
+        Troops: { min: 1, max: 3 },
+        Elites: { min: 0, max: 2 },
+        Fast_Attack: { min: 0, max: 2 },
+        Heavy_Support: { min: 0, max: 2 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    Battalion: {
+        CP: 5,
+        HQ: { min: 2, max: 3 },
+        Troops: { min: 3, max: 6 },
+        Elites: { min: 0, max: 6 },
+        Fast_Attack: { min: 0, max: 3 },
+        Heavy_Support: { min: 0, max: 3 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    Brigade: {
+        CP: 12,
+        HQ: { min: 3, max: 5 },
+        Troops: { min: 6, max: 12 },
+        Elites: { min: 3, max: 8 },
+        Fast_Attack: { min: 3, max: 5 },
+        Heavy_Support: { min: 3, max: 5 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    Vanguard: {
+        CP: 1,
+        HQ: { min: 1, max: 2 },
+        Troops: { min: 0, max: 3 },
+        Elites: { min: 3, max: 6 },
+        Fast_Attack: { min: 0, max: 2 },
+        Heavy_Support: { min: 0, max: 2 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    Spearhead: {
+        CP: 1,
+        HQ: { min: 1, max: 2 },
+        Troops: { min: 0, max: 3 },
+        Elites: { min: 0, max: 2 },
+        Fast_Attack: { min: 0, max: 2 },
+        Heavy_Support: { min: 3, max: 6 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    Outrider: {
+        CP: 1,
+        HQ: { min: 1, max: 2 },
+        Troops: { min: 0, max: 3 },
+        Elites: { min: 0, max: 2 },
+        Fast_Attack: { min: 3, max: 6 },
+        Heavy_Support: { min: 0, max: 2 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Supreme Command": {
+        CP: 1,
+        HQ: { min: 3, max: 5 },
+        Troops: { min: 0, max: 0 },
+        Elites: { min: 0, max: 1 },
+        Fast_Attack: { min: 0, max: 2 },
+        Heavy_Support: { min: 0, max: 2 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 1 },
+        Dedicated_Transports: { min: 0, max: "" },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Super-Heavy": {
+        CP: 3,
+        HQ: { min: 0, max: 0 },
+        Troops: { min: 0, max: 0 },
+        Elites: { min: 0, max: 0 },
+        Fast_Attack: { min: 0, max: 0 },
+        Heavy_Support: { min: 0, max: 0 },
+        Flyers: { min: 0, max: 0 },
+        Lord_of_War: { min: 3, max: 5 },
+        Dedicated_Transports: { min: 0, max: 0 },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Air Wing": {
+        CP: 1,
+        HQ: { min: 0, max: 0 },
+        Troops: { min: 1, max: 0 },
+        Elites: { min: 0, max: 0 },
+        Fast_Attack: { min: 0, max: 0 },
+        Heavy_Support: { min: 0, max: 0 },
+        Flyers: { min: 3, max: 5 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: 0 },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Super-Heavy Auxiliary": {
+        CP: 0,
+        HQ: { min: 0, max: 0 },
+        Troops: { min: 0, max: 0 },
+        Elites: { min: 0, max: 0 },
+        Fast_Attack: { min: 0, max: 0 },
+        Heavy_Support: { min: 0, max: 0 },
+        Flyers: { min: 0, max: 0 },
+        Lord_of_War: { min: 1, max: 1 },
+        Dedicated_Transports: { min: 0, max: 0 },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Fortification Network": {
+        CP: 0,
+        HQ: { min: 1, max: 2 },
+        Troops: { min: 1, max: 3 },
+        Elites: { min: 0, max: 2 },
+        Fast_Attack: { min: 0, max: 2 },
+        Heavy_Support: { min: 0, max: 2 },
+        Flyers: { min: 0, max: 2 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: 0 },
+        Fortification: { min: 0, max: 0 }
+    },
+    "Auxiliary Support": {
+        CP: -1,
+        HQ: { min: 0, max: 1 },
+        Troops: { min: 0, max: 1 },
+        Elites: { min: 0, max: 1 },
+        Fast_Attack: { min: 0, max: 1 },
+        Heavy_Support: { min: 0, max: 1 },
+        Flyers: { min: 0, max: 1 },
+        Lord_of_War: { min: 0, max: 0 },
+        Dedicated_Transports: { min: 0, max: 1 },
+        Fortification: { min: 0, max: 0 }
+    }
+}
+module.exports = detachmentTemplates

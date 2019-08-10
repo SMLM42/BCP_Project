@@ -74,6 +74,9 @@ const controllerObj = {
                 name = name.join('');
                 detachmentUnits.push(name)
             }
+
+            if (detachmentName.length > 3) res.end("You have more than 3 detachments and it is illegal");
+            
             for (let i = 0; i < detachmentName.length; i++) {
                 if (obj_1 == "") {
                     obj_1 = new obj(detachmentName[i]);

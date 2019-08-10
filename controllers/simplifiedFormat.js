@@ -46,7 +46,7 @@
 // dedicated_transports: 2;
 // fortification: 0
 // }
-module.exports =  simplifiedObj = {
+module.exports = simplifiedObj = {
   validate: (str, res) => {
     class obj {
       constructor(detachmentName) {
@@ -72,21 +72,47 @@ module.exports =  simplifiedObj = {
       let detachmentObj = {};
       let detachmentLine = str.split("Detachment");
       let detachmentName = [];
-      for (var i = 0; i < detachmentLine.length-1; i++) {
+
+      let leftPara = str.split('(');
+      // console.log(leftPara)
+      let factions = []
+      for (let i = 1; i < leftPara.length; i++) {
+        let finishedFaction = leftPara[i].split(')');
+        let faction = finishedFaction[0];
+        factions.push(faction)
+        // console.log(factions);
+      }
+      let overallFaction = factions[0].trim().split("-")
+      if (factions.length != 1) {
+        let check = 1
+        for (let i = 1; i < factions.length; i++) {
+          if (factions[i] === factions[i - 1]) { check++ }
+        }
+        if (check == factions.length) {
+          overallFaction = overallFaction[1]
+        }
+        else {
+          overallFaction = overallFaction[0]
+        }
+      } else { overallFaction = overallFaction[1] }
+      // console.log(overallFaction)
+      // end
+
+      for (var i = 0; i < detachmentLine.length - 1; i++) {
         let detachmentArr = detachmentLine[i].split("\n").filter(Boolean);
-        detachmentName.push(detachmentArr[detachmentArr.length-1].trim());
+        detachmentName.push(detachmentArr[detachmentArr.length - 1].trim());
       }
 
       for (let i = 0; i < detachmentName.length; i++) {
         if (obj_1 == "") {
           obj_1 = new obj(detachmentName[i]);
-          createObj(obj_1, detachmentLine[i+1])
+          createObj(obj_1, detachmentLine[i + 1])
         } else if (obj_2 == "") {
           obj_2 = new obj(detachmentName[i]);
-          createObj(obj_2, detachmentLine[i+1])
+          createObj(obj_2, detachmentLine[i + 1])
         } else if (obj_3 == "") {
           obj_3 = new obj(detachmentName[i]);
-          createObj(obj_3, detachmentLine[i+1])
+          createObj(obj_3, detachmentLine[i + 1])
         }
       }
 
@@ -149,7 +175,7 @@ module.exports =  simplifiedObj = {
 
       }
 
-      let finalobj = { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 };
+      let finalobj = { Faction: overallFaction, detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 };
       console.log(finalobj);
       return finalobj
     }

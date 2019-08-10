@@ -1,55 +1,9 @@
-// Example:
-
-// Battalion Detachment 5CP(Chaos - Daemons)[60PL, 1064pts]
-// 
-// - HQ -
-// 
-// Be’lakor[14pl, 240pts]Death Hex, Infernal Gaze, Malefic talon, Smite, The Blade of Shadows
-// Daemon Prince of Chaos[9pl, 180pts]Khorne, Malefic talon, Skullreaver, Wings
-// Daemon Prince of Chaos[9pl, 180pts]Nurlge, Hellforged sword, Malefic talon, Wings
-// 
-// - Troop -
-// 
-// Nurglings[3pl, 54pts]x3
-// Nurglings[3pl, 54pts]x3
-// Nurglings[3pl, 54pts]x3
-// Nurglings[3pl, 54pts]x3
-// Nurglings[3pl, 54pts]x3
-// Nurglings[3pl, 54pts]x3
-// 
-// - Elite -
-// 
-// Exalted Flamer[5pl, 70pts]Fire of Tzeentch, Tongues of flame
-// Exalted Flamer[5pl, 70pts]Fire of Tzeentch, Tongues of flame
-// 
-// Supreme Command Detachment 1CP(Chaos - Thousand Sons)[27 PL, 540pts]
-// 
-// -HQ -
-// 
-// Daemon Prince of Tzeentch[9pl, 180pts]Malefic talon, Malefic talon, Wings
-// Daemon Prince of Tzeentch[9pl, 180pts]Malefic talon, Malefic talon, Wings
-// Daemon Prince of Tzeentch[9pl, 180pts]Warlord, Malefic talon, Malefic talon, Wings
-
-
-// format should be:
-
-// {detachment:
-// battalion;
-// cp: 5;
-// hq: 3;
-// troops: 3;
-// elites: 0;
-// fast_attack: 2;
-// heavy_support: 3;
-// flyers: 0;
-// lord_of_war: 0;
-// dedicated_transports: 2;
-// fortification: 0
-// }
+const template = require("../public/assets/js/detachmentTemplates")
 module.exports = simplifiedObj = {
   validate: (str, res) => {
     class obj {
-      constructor(detachmentName) {
+      constructor(detachmentName, i) {
+        this.id = "Detachment: " + (i + 1);
         this.detachment = detachmentName;
         this.CP = 0;
         this.HQ = 0;
@@ -110,14 +64,14 @@ module.exports = simplifiedObj = {
       for (let i = 0; i < detachmentName.length; i++) {
         // console.log(detachmentLine[i + 1]);
         if (obj_1 == "") {
-          obj_1 = new obj(detachmentName[i]);
-          createObj(obj_1, detachmentLine[i + 1]);
+          obj_1 = new obj(detachmentName[i], i);
+          createObj(obj_1, detachmentLine[i + 1])
         } else if (obj_2 == "") {
-          obj_2 = new obj(detachmentName[i]);
-          createObj(obj_2, detachmentLine[i + 1]);
+          obj_2 = new obj(detachmentName[i], i);
+          createObj(obj_2, detachmentLine[i + 1])
         } else if (obj_3 == "") {
-          obj_3 = new obj(detachmentName[i]);
-          createObj(obj_3, detachmentLine[i + 1]);
+          obj_3 = new obj(detachmentName[i], i);
+          createObj(obj_3, detachmentLine[i + 1])
         }
       }
 
@@ -150,7 +104,6 @@ module.exports = simplifiedObj = {
           if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your fraction in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
         })
         newArr = newArr.splice(2, newArr.length);
-
         console.log(newArr.length);
 
         if (newArr.length < 1) {
@@ -158,36 +111,66 @@ module.exports = simplifiedObj = {
         } else {
           let typeDetachment;
           let msg = "";
-  
           newArr.forEach((element, index) => {
             if (index % 2 === 0) {
               typeDetachment = element.trim();
             } else {
               let num = element.split("\n").filter(Boolean).length;
               let line = element.split("\n").filter(Boolean);
-              if (detachArr.includes(line[num-1].trim())) {
+              if (detachArr.includes(line[num - 1].trim())) {
                 num--;
                 line = line.splice(0, num);
               }
-  
+
+
               for (let x = 0; x < num; x++) {
                 if (line[x].toLowerCase().match(/[^-\+=](hq)|(^toop)|(^elite)|(^fast)|(^heavy)|(^flyer)|(^lord)|(^dedicated)|(^fortification)\s?\w+?[^-\+=]/)) res.end("Please use +, -, or = to signal your fraction on/before line " + line[x]);
                 if (line[x].match(/\w+(\'\w+)?.+/).index === 1) msg += "'word' before [points], ";
                 if (line[x].match(/.*\[\d+\s?[Pp][Ll],\s?\d+\s?[pP][Tt][Ss]\].*/) === null) msg += "missing something for the pts and/or PL. Please use the follwoing format [#PL, #pts]";
                 if (msg !== "") res.end("Following error(s) is/are produced in the line " + line[x] + ":\n" + msg);
               }
-              
               obj[typeDetachment.replace(" ", "_")] = num;
             }
           });
         }
-
-
       }
-
-      let finalobj = { Faction: overallFaction, detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 };
-      console.log(finalobj);
-      return finalobj
     }
+
+    let finalobj = { Faction: overallFaction, Detachments: { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 } };
+    console.log(finalobj);
+    let test = finalobj.Detachments
+    let errors = []
+    Object.keys(test).forEach(function (det) {
+      let D = test[det].detachment
+      let total = (test[det].HQ + test[det].Troop + test[det].Elite + test[det].Fast_Attack + test[det].Heavy_Support + test[det].Flyers + test[det].Lord_of_War)
+      let transports = 0
+      if (template[D].Dedicated_Transports.max === "") {
+        transports = total
+      }
+      console.log("Total: " + total)
+      console.log("CP:" + test[det].CP + " Target CP:" + template[D].CP)
+      if (test[det].CP != template[D].CP) { } else { }
+      console.log("HQ " + test[det].HQ + " min:" + template[D].HQ.min + " max:" + template[D].HQ.max)
+      if (test[det].HQ < template[D].HQ.min || test[det].HQ > template[D].HQ.max) { errors.push((test[det].id) + " Invalid # of: HQ") } else { }
+      console.log("Troops " + test[det].Troop + " min:" + template[D].Troops.min + " max:" + template[D].Troops.max)
+      if (test[det].Troop < template[D].Troops.min || test[det].Troop > template[D].Troops.max) { errors.push((test[det].id) + " Invalid # of: Troops") } else { }
+      console.log("Elites " + test[det].Elite + " min:" + template[D].Elites.min + " max:" + template[D].Elites.max)
+      if (test[det].Elite < template[D].Elites.min || test[det].Elite > template[D].Elites.max) { errors.push((test[det].id) + " Invalid # of: Elites") } else { }
+      console.log("Fast_Attack " + test[det].Fast_Attack + " min:" + template[D].Fast_Attack.min + " max:" + template[D].Fast_Attack.max)
+      if (test[det].Fast_Attack < template[D].Fast_Attack.min || test[det].Fast_Attack > template[D].Fast_Attack.max) { errors.push((test[det].id) + " Invalid # of: Fast Attack") } else { }
+      console.log("Heavy_Support " + test[det].Heavy_Support + " min:" + template[D].Heavy_Support.min + " max:" + template[D].Heavy_Support.max)
+      if (test[det].Heavy_Support < template[D].Heavy_Support.min || test[det].Heavy_Support > template[D].Heavy_Support.max) { errors.push((test[det].id) + " Invalid # of: Heavy Support") } else { }
+      console.log("Flyers " + test[det].Flyers + " min:" + template[D].Flyers.min + " max:" + template[D].Flyers.max)
+      if (test[det].Flyers < template[D].Flyers.min || test[det].Flyers > template[D].Flyers.max) { errors.push((test[det].id) + " Invalid # of: Flyers") } else { }
+      console.log("Lord_of_War " + test[det].Lord_of_War + " min:" + template[D].Lord_of_War.min + " max:" + template[D].Lord_of_War.max)
+      if (test[det].Lord_of_War < template[D].Lord_of_War.min || test[det].Lord_of_War > template[D].Lord_of_War.max) { errors.push((test[det].id) + " Invalid # of: Lord of War") } else { }
+      console.log("Dedicated_transports " + test[det].Dedicated_Transports + " min:" + template[D].Dedicated_Transports.min + " max:" + transports)
+      if (test[det].Dedicated_transports > transports) { errors.push((test[det].id) + " Too many Dedicated Transports") } else { }
+      console.log("Fortification " + test[det].Fortification + " min:" + template[D].Fortification.min + " max:" + template[D].Fortification.max)
+      if (test[det].Fortification < template[D].Fortification.min || test[det].Fortification > template[D].Fortification.max) { errors.push((test[det].id) + " Invalid # of: Fortification") } else { }
+
+    })
+    console.log(errors)
+    return finalobj
   }
 }

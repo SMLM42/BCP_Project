@@ -114,7 +114,7 @@ module.exports =  simplifiedObj = {
         let newArr = arr.split(/[-\+=]/);
         let red = [newArr[0], newArr[1]].join(" ");
         match.forEach(e => {
-          if(red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your detachment");
+          if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your detachment in '" + red.toLowerCase().match(e.toLowerCase()) + "'");
         })
         newArr = newArr.splice(2, newArr.length);
 
@@ -137,7 +137,7 @@ module.exports =  simplifiedObj = {
             }
 
             for (let x = 0; x < line.length; x++) {
-              if (line[x].match(/[^-\+=]\w+[^-\+=]/)) res.end("Please use +, -, or = to signal your detachment");
+              if (line[x].match(/[^-\+=]\w+[^-\+=]/)) res.end("Please use +, -, or = to signal your detachment on line " + line[x]);
               if (line[x].match(/\w+(\'\w+)?.+/).index === 1) msg += "'word' before [points], ";
               if (line[x].match(/.*\[\d+\s?[Pp][Ll],\s?\d+\s?[pP][Tt][Ss]\].*/) === null) msg += "missing something for the pts and/or PL. Please use the follwoing format [#PL, #pts]";
               if (msg !== "") res.end("Following error(s) is/are produced in the line " + line[x] + ":\n" + msg);

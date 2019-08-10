@@ -59,7 +59,10 @@ module.exports = simplifiedObj = {
 
       if (detachmentName.length > 3) res.end("You have more than 3 detachments and it is illegal");
 
+      // console.log(detachmentLine);
+
       for (let i = 0; i < detachmentName.length; i++) {
+        // console.log(detachmentLine[i + 1]);
         if (obj_1 == "") {
           obj_1 = new obj(detachmentName[i], i);
           createObj(obj_1, detachmentLine[i + 1])
@@ -73,7 +76,9 @@ module.exports = simplifiedObj = {
       }
 
       function createObj(obj, arr) {
-        let detach = obj.detachment
+        let detach = obj.detachment;
+        arr = arr.replace("Super-Heavy", "Super Heavy");
+        arr = arr.replace("super-heavy", "Super Heavy");
 
         if (detach == "Battalion") {
           obj.CP = 5;
@@ -83,29 +88,29 @@ module.exports = simplifiedObj = {
           obj.CP = 1;
         } else if (detach == "Auxiliary Support") {
           obj.CP = -1;
-        } else if (detach == "Super-Heavy") {
+        } else if (detach == "Super Heavy") {
           obj.CP = 3;
         } else {
           obj.CP = 0;
         }
 
-        let detachArr = ["Battalion", "Brigade", "Vanguard", "Spearhead", "Outrider", "Supreme Command", "Air Wing", "Auxiliary Support", "Super-Heavy", "Patrol"];
+        let detachArr = ["Battalion", "Brigade", "Vanguard", "Spearhead", "Outrider", "Supreme Command", "Air Wing", "Auxiliary Support", "Super Heavy Auxiliary", "Patrol"];
 
         let match = ["HQ", "Troop", "Elite", "Fast Attack", "Heavy Support", "Flyer", "Lord of War", "Dedicated Transport", "Fortification"];
 
         let newArr = arr.split(/[-\+=]/);
         let red = [newArr[0], newArr[1]].join(" ");
         match.forEach(e => {
-          if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your detachment in '" + red.toLowerCase().match(e.toLowerCase()) + "'");
+          if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your fraction in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
         })
         newArr = newArr.splice(2, newArr.length);
         console.log(newArr.length);
+
         if (newArr.length < 1) {
           res.end("Please use +, -, or = to signal your fraction in the detachment : " + detach);
         } else {
           let typeDetachment;
           let msg = "";
-
           newArr.forEach((element, index) => {
             if (index % 2 === 0) {
               typeDetachment = element.trim();
@@ -117,13 +122,13 @@ module.exports = simplifiedObj = {
                 line = line.splice(0, num);
               }
 
+
               for (let x = 0; x < num; x++) {
                 if (line[x].toLowerCase().match(/[^-\+=](hq)|(^toop)|(^elite)|(^fast)|(^heavy)|(^flyer)|(^lord)|(^dedicated)|(^fortification)\s?\w+?[^-\+=]/)) res.end("Please use +, -, or = to signal your fraction on/before line " + line[x]);
                 if (line[x].match(/\w+(\'\w+)?.+/).index === 1) msg += "'word' before [points], ";
                 if (line[x].match(/.*\[\d+\s?[Pp][Ll],\s?\d+\s?[pP][Tt][Ss]\].*/) === null) msg += "missing something for the pts and/or PL. Please use the follwoing format [#PL, #pts]";
                 if (msg !== "") res.end("Following error(s) is/are produced in the line " + line[x] + ":\n" + msg);
               }
-
               obj[typeDetachment.replace(" ", "_")] = num;
             }
           });

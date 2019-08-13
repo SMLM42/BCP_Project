@@ -73,6 +73,8 @@ module.exports = simplifiedObj = {
         let detach = obj.detachment;
         arr = arr.replace("Super-Heavy", "Super Heavy");
         arr = arr.replace("super-heavy", "Super Heavy");
+        arr = arr.replace("Mega-kannons", "Mega kannons");
+        arr = arr.replace("mega-kannons", "mega kannons");
 
         if (detach == "Battalion") {
           obj.CP = 5;
@@ -93,12 +95,22 @@ module.exports = simplifiedObj = {
         let match = ["HQ", "Troop", "Elite", "Fast Attack", "Heavy Support", "Flyer", "Lord of War", "Dedicated Transport", "Fortification"];
 
         let newArr = arr.split(/[-\+=]/);
-        let red = [newArr[0], newArr[1]].join(" ");
-        match.forEach(e => {
-          if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your Unit Type in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
-        })
-        newArr = newArr.splice(2, newArr.length);
-        console.log(newArr.length);
+        if (newArr[0].match(/(\(\w+\s)$/)) {
+          let red = [newArr[0], newArr[1]].join(" ");
+          console.log(red);
+          match.forEach(e => {
+            if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your unit type in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
+          })
+          newArr = newArr.splice(2, newArr.length);
+        } else {
+          let red = newArr[0];
+          console.log(red);
+          match.forEach(e => {
+            if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your unit type in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
+          })
+          newArr = newArr.splice(1, newArr.length);
+        }
+        // console.log(newArr);
 
         if (newArr.length < 1) {
           res.end("Please use +, -, or = to signal each unit type devision within the detachment : " + detach);
@@ -116,9 +128,9 @@ module.exports = simplifiedObj = {
                 line = line.splice(0, num);
               }
               for (let x = 0; x < num; x++) {
-                if (line[x].toLowerCase().match(/[^-\+=](hq)|(^toop)|(^elite)|(^fast)|(^heavy)|(^flyer)|(^lord)|(^dedicated)|(^fortification)\s?\w+?[^-\+=]/)) res.end("Please use +, -, or = to signal your Unit Type on/before line " + line[x]);
+                if (line[x].toLowerCase().match(/[^-\+=]((hq)|(^toop)|(^elite)|(^fast)|(^heavy)|(^flyer)|(^lord)|(^dedicated)|(^fortification))\s?\w+?[^-\+=]/)) res.end("Please use +, -, or = to signal your Unit Type on/before line " + line[x]);
                 if (line[x].match(/\w+(\'\w+)?.+/).index === 1) msg += "'word' before [points], ";
-                if (line[x].match(/.*\[\d+\s?[Pp][Ll],\s?\d+\s?[pP][Tt][Ss]\].*/) === null) msg += "missing something for the pts and/or PL. Please use the following format [#PL, #pts]";
+                if (line[x].match(/.*\[\s*\d+\s*[Pp][Ll],\s*\d+\s*[pP][Tt][Ss]\s*\].*/) === null && line[x].match(/.*\[\s*\d+\s*[pP][Tt][Ss]\s*,\s*\d+\s*[Pp][Ll]\s*\].*/) === null) msg += "missing something for the pts and/or PL. Please use the following format [#PL, #pts]";
                 if (msg !== "") res.end("Following error(s) is/are produced in the line " + line[x] + ":\n" + msg);
               }
               obj[typeDetachment.replace(" ", "_")] = num;

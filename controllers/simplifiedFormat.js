@@ -185,7 +185,7 @@ module.exports = simplifiedObj = {
         if (test[det].Fortification < template[D].Fortification.min || test[det].Fortification > template[D].Fortification.max) { errors.push((test[det].id) + " Invalid # of: Fortification") }
 
       })
-      if (error.length > 0) { console.log(errors) }
+      if (errors.length > 0) { console.log(errors) }
       else { console.log("Valid List") }
       return finalobj
     }

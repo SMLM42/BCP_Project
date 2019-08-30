@@ -71,10 +71,9 @@ module.exports = simplifiedObj = {
 
       function createObj(obj, arr) {
         let detach = obj.detachment;
-        arr = arr.replace("Super-Heavy", "Super Heavy");
-        arr = arr.replace("super-heavy", "Super Heavy");
-        arr = arr.replace("Mega-kannons", "Mega kannons");
-        arr = arr.replace("mega-kannons", "mega kannons");
+        arr = arr.replace(/\w+-\w+/g, match => match.split("-").join(" "));
+
+        console.log(arr);
 
         if (detach == "Battalion") {
           obj.CP = 5;
@@ -97,14 +96,14 @@ module.exports = simplifiedObj = {
         let newArr = arr.split(/[-\+=]/);
         if (newArr[0].match(/(\(\w+\s)$/)) {
           let red = [newArr[0], newArr[1]].join(" ");
-          console.log(red);
+          // console.log(red);
           match.forEach(e => {
             if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your unit type in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
           })
           newArr = newArr.splice(2, newArr.length);
         } else {
           let red = newArr[0];
-          console.log(red);
+          // console.log(red);
           match.forEach(e => {
             if (red.toLowerCase().match(e.toLowerCase())) res.end("Please use +, -, or = to signal your unit type in/before '" + red.toLowerCase().match(e.toLowerCase()) + "'");
           })

@@ -35,7 +35,10 @@ module.exports = simplifiedObj = {
         let faction = finishedFaction[0];
         factions.push(faction)
       }
-      let overallFaction = factions[0].trim().split("-")
+      let overallFaction = factions[0]
+      if (overallFaction.includes("-")) { overallFaction = factions[0].trim().split("-") }
+      else { overallFaction = factions[0].trim().split(" ") }
+
       if (factions.length != 1) {
         let check = 1
         for (let i = 1; i < factions.length; i++) {
@@ -48,7 +51,7 @@ module.exports = simplifiedObj = {
           overallFaction = overallFaction[0]
         }
       } else { overallFaction = overallFaction[1] }
-
+      // console.log("Faction:" + overallFaction)
       for (var i = 0; i < detachmentLine.length - 1; i++) {
         let detachmentArr = detachmentLine[i].split("\n").filter(Boolean);
         detachmentName.push(detachmentArr[detachmentArr.length - 1].trim());
@@ -137,53 +140,53 @@ module.exports = simplifiedObj = {
           });
         }
       }
+      let finalobj = { Faction: overallFaction, Detachments: { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 } };
+      console.log(finalobj);
+      let test = finalobj.Detachments
+      let errors = []
+      Object.keys(test).forEach(function (det) {
+        let D = test[det].detachment
+        let total = (test[det].HQ + test[det].Troop + test[det].Elite + test[det].Fast_Attack + test[det].Heavy_Support + test[det].Flyers + test[det].Lord_of_War)
+        let transports = 0
+        if (template[D].Dedicated_Transports.max === "") {
+          transports = total
+        }
+        // console.log("Total: " + total)
+
+        // console.log("CP:" + test[det].CP + " Target CP:" + template[D].CP)
+        if (test[det].CP != template[D].CP) { }
+
+        // console.log("HQ " + test[det].HQ + " min:" + template[D].HQ.min + " max:" + template[D].HQ.max)
+        if (test[det].HQ < template[D].HQ.min || test[det].HQ > template[D].HQ.max) { errors.push((test[det].id) + " Invalid # of: HQ") }
+
+        // console.log("Troops " + test[det].Troop + " min:" + template[D].Troops.min + " max:" + template[D].Troops.max)
+        if (test[det].Troop < template[D].Troops.min || test[det].Troop > template[D].Troops.max) { errors.push((test[det].id) + " Invalid # of: Troops") }
+
+        // console.log("Elites " + test[det].Elite + " min:" + template[D].Elites.min + " max:" + template[D].Elites.max)
+        if (test[det].Elite < template[D].Elites.min || test[det].Elite > template[D].Elites.max) { errors.push((test[det].id) + " Invalid # of: Elites") }
+
+        // console.log("Fast_Attack " + test[det].Fast_Attack + " min:" + template[D].Fast_Attack.min + " max:" + template[D].Fast_Attack.max)
+        if (test[det].Fast_Attack < template[D].Fast_Attack.min || test[det].Fast_Attack > template[D].Fast_Attack.max) { errors.push((test[det].id) + " Invalid # of: Fast Attack") }
+
+        // console.log("Heavy_Support " + test[det].Heavy_Support + " min:" + template[D].Heavy_Support.min + " max:" + template[D].Heavy_Support.max)
+        if (test[det].Heavy_Support < template[D].Heavy_Support.min || test[det].Heavy_Support > template[D].Heavy_Support.max) { errors.push((test[det].id) + " Invalid # of: Heavy Support") }
+
+        // console.log("Flyers " + test[det].Flyers + " min:" + template[D].Flyers.min + " max:" + template[D].Flyers.max)
+        if (test[det].Flyers < template[D].Flyers.min || test[det].Flyers > template[D].Flyers.max) { errors.push((test[det].id) + " Invalid # of: Flyers") }
+
+        // console.log("Lord_of_War " + test[det].Lord_of_War + " min:" + template[D].Lord_of_War.min + " max:" + template[D].Lord_of_War.max)
+        if (test[det].Lord_of_War < template[D].Lord_of_War.min || test[det].Lord_of_War > template[D].Lord_of_War.max) { errors.push((test[det].id) + " Invalid # of: Lord of War") }
+
+        // console.log("Dedicated_transports " + test[det].Dedicated_Transports + " min:" + template[D].Dedicated_Transports.min + " max:" + transports)
+        if (test[det].Dedicated_transports > transports) { errors.push((test[det].id) + " Too many Dedicated Transports") }
+
+        // console.log("Fortification " + test[det].Fortification + " min:" + template[D].Fortification.min + " max:" + template[D].Fortification.max)
+        if (test[det].Fortification < template[D].Fortification.min || test[det].Fortification > template[D].Fortification.max) { errors.push((test[det].id) + " Invalid # of: Fortification") }
+
+      })
+      if (errors.length > 0) { console.log(errors) }
+      else { console.log("Valid List") }
+      return finalobj
     }
-
-    let finalobj = { Faction: overallFaction, Detachments: { detachment1: obj_1, detachment2: obj_2, detachment3: obj_3 } };
-    console.log(finalobj);
-    let test = finalobj.Detachments
-    let errors = []
-    Object.keys(test).forEach(function (det) {
-      let D = test[det].detachment
-      let total = (test[det].HQ + test[det].Troop + test[det].Elite + test[det].Fast_Attack + test[det].Heavy_Support + test[det].Flyers + test[det].Lord_of_War)
-      let transports = 0
-      if (template[D].Dedicated_Transports.max === "") {
-        transports = total
-      }
-      console.log("Total: " + total)
-
-      console.log("CP:" + test[det].CP + " Target CP:" + template[D].CP)
-      if (test[det].CP != template[D].CP) { }
-
-      console.log("HQ " + test[det].HQ + " min:" + template[D].HQ.min + " max:" + template[D].HQ.max)
-      if (test[det].HQ < template[D].HQ.min || test[det].HQ > template[D].HQ.max) { errors.push((test[det].id) + " Invalid # of: HQ") }
-
-      console.log("Troops " + test[det].Troop + " min:" + template[D].Troops.min + " max:" + template[D].Troops.max)
-      if (test[det].Troop < template[D].Troops.min || test[det].Troop > template[D].Troops.max) { errors.push((test[det].id) + " Invalid # of: Troops") }
-
-      console.log("Elites " + test[det].Elite + " min:" + template[D].Elites.min + " max:" + template[D].Elites.max)
-      if (test[det].Elite < template[D].Elites.min || test[det].Elite > template[D].Elites.max) { errors.push((test[det].id) + " Invalid # of: Elites") }
-
-      console.log("Fast_Attack " + test[det].Fast_Attack + " min:" + template[D].Fast_Attack.min + " max:" + template[D].Fast_Attack.max)
-      if (test[det].Fast_Attack < template[D].Fast_Attack.min || test[det].Fast_Attack > template[D].Fast_Attack.max) { errors.push((test[det].id) + " Invalid # of: Fast Attack") }
-
-      console.log("Heavy_Support " + test[det].Heavy_Support + " min:" + template[D].Heavy_Support.min + " max:" + template[D].Heavy_Support.max)
-      if (test[det].Heavy_Support < template[D].Heavy_Support.min || test[det].Heavy_Support > template[D].Heavy_Support.max) { errors.push((test[det].id) + " Invalid # of: Heavy Support") }
-
-      console.log("Flyers " + test[det].Flyers + " min:" + template[D].Flyers.min + " max:" + template[D].Flyers.max)
-      if (test[det].Flyers < template[D].Flyers.min || test[det].Flyers > template[D].Flyers.max) { errors.push((test[det].id) + " Invalid # of: Flyers") }
-
-      console.log("Lord_of_War " + test[det].Lord_of_War + " min:" + template[D].Lord_of_War.min + " max:" + template[D].Lord_of_War.max)
-      if (test[det].Lord_of_War < template[D].Lord_of_War.min || test[det].Lord_of_War > template[D].Lord_of_War.max) { errors.push((test[det].id) + " Invalid # of: Lord of War") }
-
-      console.log("Dedicated_transports " + test[det].Dedicated_Transports + " min:" + template[D].Dedicated_Transports.min + " max:" + transports)
-      if (test[det].Dedicated_transports > transports) { errors.push((test[det].id) + " Too many Dedicated Transports") }
-
-      console.log("Fortification " + test[det].Fortification + " min:" + template[D].Fortification.min + " max:" + template[D].Fortification.max)
-      if (test[det].Fortification < template[D].Fortification.min || test[det].Fortification > template[D].Fortification.max) { errors.push((test[det].id) + " Invalid # of: Fortification") }
-
-    })
-    console.log(errors)
-    return finalobj
   }
 }
